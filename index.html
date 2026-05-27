@@ -510,34 +510,34 @@ h4.pname::before{content:'';width:9px;height:9px;border-radius:50%;background:va
 }
 
 /* ═══════════════════════════════════════
-   CERTIFICATIONS
+   CERTIFICATIONS — compact list
    ═══════════════════════════════════════ */
 .certifications{background:var(--surface);transition:background 0.4s;}
-.cg{margin-bottom:44px;}
-.cg-label{
+.cert-groups{display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;}
+.cg-ttl{
   font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;
-  color:var(--muted);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);
+  color:var(--muted);margin-bottom:16px;padding-bottom:10px;
+  border-bottom:1px solid var(--border);
 }
-.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:12px;}
-
-.cc{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);
-  padding:22px 20px;position:relative;overflow:hidden;
-  box-shadow:var(--sh-sm);
-  transition:border-color 0.2s,transform 0.18s,box-shadow 0.2s;
+.cert-list{display:flex;flex-direction:column;gap:10px;}
+.cert-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 14px;border-radius:var(--r);
+  border:1px solid var(--border);background:var(--bg2);
+  transition:border-color 0.2s,background 0.2s;
 }
-.cc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
-.cc.agile::before{background:var(--accent);}
-.cc.ai::before{background:var(--gold);}
-.cc.data::before{background:var(--sage);}
-.cc:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--sh-lg);}
-[data-theme="dark"] .cc{background:var(--surface2);}
-[data-theme="dark"] .cc:hover{background:var(--bg3);}
-
-.cc-icon{font-size:22px;margin-bottom:14px;}
-h3.cc-name{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.45;margin-bottom:8px;}
-.cc-issuer{font-size:12px;color:var(--muted);}
-.cc-issuer span{font-family:monospace;font-size:11px;display:block;margin-top:3px;opacity:0.75;}
+.cert-row:hover{border-color:color-mix(in srgb,var(--accent) 28%,transparent);background:var(--surface);}
+[data-theme="dark"] .cert-row{background:var(--surface2);}
+[data-theme="dark"] .cert-row:hover{background:var(--bg3);}
+.cert-dot{
+  width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px;
+}
+.cert-dot.agile{background:var(--accent);}
+.cert-dot.ai{background:var(--gold);}
+.cert-dot.data{background:var(--sage);}
+.cert-row-text{}
+.cert-row-name{font-size:13px;font-weight:600;color:var(--ink);line-height:1.35;}
+.cert-row-meta{font-size:11px;color:var(--muted);margin-top:2px;}
 
 /* ═══════════════════════════════════════
    TOOLS
@@ -694,6 +694,7 @@ footer{
   .exp-panels{overflow:visible;}
   .ep-out,.ep-hidden{position:absolute !important;}
   .tools-grid{grid-template-columns:1fr;gap:40px;}
+  .cert-groups{grid-template-columns:1fr 1fr;}
   .cta-band{padding:72px 24px;}
   footer{padding:32px 24px;}
   h1.hero-name{letter-spacing:-2px;}
@@ -702,7 +703,7 @@ footer{
 @media(max-width:560px){
   .hero-stats{flex-wrap:wrap;gap:20px;}
   .cta-btns{flex-direction:column;align-items:center;}
-  .cert-grid{grid-template-columns:1fr;}
+  .cert-groups{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -980,36 +981,98 @@ footer{
 <section class="certifications" id="certifications" aria-labelledby="cert-h">
   <div class="wrap">
     <p class="sec-label rv">Credentials</p>
-    <h2 class="sec-ttl rv" id="cert-h">Certified to<br/><em>lead &amp; deliver.</em></h2>
+    <h2 class="sec-ttl rv" id="cert-h">Certified to <em>lead &amp; deliver.</em></h2>
+    <div class="cert-groups rv">
 
-    <div class="cg rv">
-      <p class="cg-label">Agile &amp; Product Leadership</p>
-      <div class="cert-grid">
-        <div class="cc agile"><div class="cc-icon">🏅</div><h3 class="cc-name">Certified Scrum Product Owner (CSPO)</h3><p class="cc-issuer">Scrum Alliance<span>ID: 1958072</span></p></div>
-        <div class="cc agile"><div class="cc-icon">🏅</div><h3 class="cc-name">Certified Scrum Master (CSM)</h3><p class="cc-issuer">Scrum Alliance<span>ID: 1938841</span></p></div>
-        <div class="cc agile"><div class="cc-icon">🏅</div><h3 class="cc-name">SAFe Product Owner / Product Manager (POPM)</h3><p class="cc-issuer">Scaled Agile<span>ID: 29310040-2914</span></p></div>
+      <div>
+        <p class="cg-ttl">Agile &amp; Product</p>
+        <ul class="cert-list">
+          <li class="cert-row">
+            <span class="cert-dot agile"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">Certified Scrum Product Owner (CSPO)</div>
+              <div class="cert-row-meta">Scrum Alliance · ID 1958072</div>
+            </div>
+          </li>
+          <li class="cert-row">
+            <span class="cert-dot agile"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">Certified Scrum Master (CSM)</div>
+              <div class="cert-row-meta">Scrum Alliance · ID 1938841</div>
+            </div>
+          </li>
+          <li class="cert-row">
+            <span class="cert-dot agile"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">SAFe Product Owner / Product Manager (POPM)</div>
+              <div class="cert-row-meta">Scaled Agile · ID 29310040-2914</div>
+            </div>
+          </li>
+        </ul>
       </div>
-    </div>
 
-    <div class="cg rv">
-      <p class="cg-label">AI &amp; Intelligent Products</p>
-      <div class="cert-grid">
-        <div class="cc ai"><div class="cc-icon">🤖</div><h3 class="cc-name">AI Product Owner</h3><p class="cc-issuer">Scrum Alliance<span>ID: 1S7MUDQZFCUC</span></p></div>
-        <div class="cc ai"><div class="cc-icon">🤖</div><h3 class="cc-name">AI for Product Owners</h3><p class="cc-issuer">Coursera<span>Completion Certificate</span></p></div>
-        <div class="cc ai"><div class="cc-icon">🤖</div><h3 class="cc-name">Microsoft AI Product Owner Professional</h3><p class="cc-issuer">Microsoft<span>ID: 5R845T5YIY1W</span></p></div>
-        <div class="cc ai"><div class="cc-icon">🤖</div><h3 class="cc-name">Microsoft AI Product Manager</h3><p class="cc-issuer">Microsoft<span>2025</span></p></div>
-        <div class="cc ai"><div class="cc-icon">🔍</div><h3 class="cc-name">Google AI Professional</h3><p class="cc-issuer">Google<span>ID: 4UOT5LUYI67U</span></p></div>
+      <div>
+        <p class="cg-ttl">AI &amp; Intelligent Products</p>
+        <ul class="cert-list">
+          <li class="cert-row">
+            <span class="cert-dot ai"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">AI Product Owner</div>
+              <div class="cert-row-meta">Scrum Alliance · ID 1S7MUDQZFCUC</div>
+            </div>
+          </li>
+          <li class="cert-row">
+            <span class="cert-dot ai"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">AI for Product Owners</div>
+              <div class="cert-row-meta">Coursera · Completion Certificate</div>
+            </div>
+          </li>
+          <li class="cert-row">
+            <span class="cert-dot ai"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">Microsoft AI Product Owner Professional</div>
+              <div class="cert-row-meta">Microsoft · ID 5R845T5YIY1W</div>
+            </div>
+          </li>
+          <li class="cert-row">
+            <span class="cert-dot ai"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">Microsoft AI Product Manager</div>
+              <div class="cert-row-meta">Microsoft · 2025</div>
+            </div>
+          </li>
+          <li class="cert-row">
+            <span class="cert-dot ai"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">Google AI Professional</div>
+              <div class="cert-row-meta">Google · ID 4UOT5LUYI67U</div>
+            </div>
+          </li>
+        </ul>
       </div>
-    </div>
 
-    <div class="cg rv">
-      <p class="cg-label">Data, Analytics &amp; Cloud</p>
-      <div class="cert-grid">
-        <div class="cc data"><div class="cc-icon">⚡</div><h3 class="cc-name">Generative AI Fundamentals</h3><p class="cc-issuer">Databricks Academy<span>Academy Accreditation</span></p></div>
-        <div class="cc data"><div class="cc-icon">📊</div><h3 class="cc-name">Market Research &amp; Competitive Analysis</h3><p class="cc-issuer">Coursera<span>Completion Certificate</span></p></div>
+      <div>
+        <p class="cg-ttl">Data &amp; Analytics</p>
+        <ul class="cert-list">
+          <li class="cert-row">
+            <span class="cert-dot data"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">Generative AI Fundamentals</div>
+              <div class="cert-row-meta">Databricks Academy Accreditation</div>
+            </div>
+          </li>
+          <li class="cert-row">
+            <span class="cert-dot data"></span>
+            <div class="cert-row-text">
+              <div class="cert-row-name">Market Research &amp; Competitive Analysis</div>
+              <div class="cert-row-meta">Coursera · Completion Certificate</div>
+            </div>
+          </li>
+        </ul>
       </div>
-    </div>
 
+    </div>
   </div>
 </section>
 
