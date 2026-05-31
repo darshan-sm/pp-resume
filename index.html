@@ -151,13 +151,16 @@ ul{list-style:none;}
 .nav-right{display:flex;align-items:center;gap:10px;}
 
 .theme-btn{
-  width:40px;height:40px;border-radius:50%;
-  border:1.5px solid var(--border2);background:var(--surface);
-  color:var(--ink);cursor:pointer;font-size:17px;
+  width:28px;height:28px;border-radius:6px;
+  border:none;background:transparent;
+  color:var(--muted);cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  transition:background 0.2s,transform 0.2s;
+  opacity:0.5;
+  transition:opacity 0.2s,color 0.2s;
+  flex-shrink:0;padding:0;
 }
-.theme-btn:hover{background:var(--bg2);transform:scale(1.08);}
+.theme-btn:hover{opacity:1;color:var(--ink);}
+.theme-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;display:block;}
 .icon-moon{display:none;}
 [data-theme="dark"] .icon-sun{display:none;}
 [data-theme="dark"] .icon-moon{display:block;}
@@ -429,44 +432,33 @@ h2.sec-ttl em{font-style:italic;color:var(--accent);}
 }
 .exp-tab.active .exp-tab-count{opacity:1;}
 
-/* ── ANIMATED PANEL SYSTEM ── */
+/* ── PANEL SYSTEM (reliable) ── */
 .exp-body{padding-left:64px;}
-.exp-panels{position:relative;transition:height 0.65s var(--ease);}
-/* All panels share base transition */
-.exp-panel{
-  width:100%;
-  transition:opacity 0.6s var(--ease),transform 0.6s var(--ease);
+.exp-panels{
+  position:relative;
+  /* min-height set by JS to match active panel */
+  transition:min-height 0.55s var(--ease);
 }
-/* ACTIVE: in normal flow, fully visible */
+/* Both panels always absolute — no position switching = no bugs */
+.exp-panel{
+  position:absolute;top:0;left:0;right:0;
+  opacity:0;transform:translateY(22px);
+  pointer-events:none;
+  transition:opacity 0.55s var(--ease),transform 0.55s var(--ease);
+}
 .ep-active{
-  position:relative !important;
-  opacity:1 !important;transform:none !important;
+  opacity:1 !important;
+  transform:none !important;
   pointer-events:all !important;
 }
-/* OUT: absolute, fades up and away */
-.ep-out{
-  position:absolute !important;inset:0;
-  opacity:0 !important;transform:translateY(-22px) !important;
-  pointer-events:none !important;
-  z-index:0;
-}
-/* HIDDEN: absolute, ready to enter from below — no transition on initial hide */
-.ep-hidden{
-  position:absolute !important;inset:0;
-  opacity:0 !important;transform:translateY(28px) !important;
-  pointer-events:none !important;
-  transition:none !important;
-  z-index:0;
-}
-
-/* Cards inside panels stagger in when panel activates */
-.ep-active .pcard{animation:cardIn 0.5s var(--ease) both;}
-.ep-active .pcard:nth-child(1){animation-delay:.05s;}
-.ep-active .pcard:nth-child(2){animation-delay:.12s;}
-.ep-active .pcard:nth-child(3){animation-delay:.19s;}
-.ep-active .pcard:nth-child(4){animation-delay:.26s;}
-.ep-active .pcard:nth-child(5){animation-delay:.33s;}
-@keyframes cardIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+/* Card stagger fires when panel becomes active */
+.ep-active .pcard{animation:cardIn 0.45s var(--ease) both;}
+.ep-active .pcard:nth-child(1){animation-delay:.06s;}
+.ep-active .pcard:nth-child(2){animation-delay:.13s;}
+.ep-active .pcard:nth-child(3){animation-delay:.20s;}
+.ep-active .pcard:nth-child(4){animation-delay:.27s;}
+.ep-active .pcard:nth-child(5){animation-delay:.34s;}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
 
 /* Company name display */
 .exp-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:4px;}
@@ -722,8 +714,10 @@ footer{
   </ul>
   <div class="nav-right">
     <button class="theme-btn" id="themeBtn" aria-label="Toggle dark/light mode" type="button">
-      <span class="icon-sun">☀️</span>
-      <span class="icon-moon">🌙</span>
+      <!-- Sun icon (light mode) -->
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
+      <!-- Moon icon (dark mode) -->
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
     <a href="https://docs.google.com/document/d/1UYx4AzK-h4liKk5zsdVXW8Dveqp4xliZ/export?format=pdf" target="_blank" rel="noopener noreferrer" class="nav-dl">⬇ Resume</a>
     <a href="mailto:pallavipande45@gmail.com" class="nav-hire">Hire Me</a>
@@ -918,8 +912,8 @@ footer{
             </article>
           </div>
 
-          <!-- BARCLAYS PANEL (hidden, ready to enter) -->
-          <div class="exp-panel ep-hidden" id="panel-barclays">
+          <!-- BARCLAYS PANEL (hidden by default via CSS opacity:0) -->
+          <div class="exp-panel" id="panel-barclays">
             <article itemscope itemtype="https://schema.org/OrganizationRole">
               <div class="exp-hdr">
                 <div>
@@ -1172,28 +1166,19 @@ document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 (function(){
   const wrap     = document.getElementById('expPanels');
   const tabs     = document.querySelectorAll('.exp-tab[data-target]');
-  const panels   = document.querySelectorAll('.exp-panel');
   let   activeId = 'panel-citi';
   let   busy     = false;
 
-  /* Set container height to match currently active panel */
-  function syncHeight(panel){
-    // Temporarily measure natural height: make it invisible but relative
-    const wasClass = panel.className;
-    panel.style.cssText = 'position:relative !important;opacity:0;pointer-events:none;';
-    const h = panel.scrollHeight;
-    panel.style.cssText = '';
-    panel.className = wasClass;
-    return h;
+  /* Set container min-height to match a panel's scroll height.
+     Since panels are position:absolute (left:0,right:0), scrollHeight
+     correctly reflects their full content height. */
+  function setWrapHeight(panelId){
+    const p = document.getElementById(panelId);
+    if(p && wrap) wrap.style.minHeight = p.scrollHeight + 'px';
   }
 
-  /* Initialise height */
-  function initHeight(){
-    const active = document.getElementById(activeId);
-    if(active) wrap.style.height = active.offsetHeight + 'px';
-  }
-  // Wait for layout then set height
-  requestAnimationFrame(initHeight);
+  /* Init on first paint */
+  requestAnimationFrame(() => setWrapHeight(activeId));
 
   function switchTo(targetId){
     if(targetId === activeId || busy) return;
@@ -1201,84 +1186,56 @@ document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
     const current = document.getElementById(activeId);
     const next    = document.getElementById(targetId);
-    if(!current || !next) { busy=false; return; }
+    if(!current || !next){ busy = false; return; }
 
-    /* 1. Lock container at current height so it doesn't collapse */
-    wrap.style.height = current.offsetHeight + 'px';
+    /* 1. Animate container to next panel's height */
+    setWrapHeight(targetId);
 
-    /* 2. Exit current: slide up & fade out (absolute, out of flow) */
+    /* 2. Fade out current */
     current.classList.remove('ep-active');
-    current.classList.add('ep-out');
 
-    /* 3. Next starts invisible from below (no transition yet) */
-    next.classList.remove('ep-hidden');
-    next.classList.add('ep-hidden'); // ensure transition:none is applied
-    // Force reflow so browser registers the ep-hidden state before we transition
-    void next.offsetHeight;
+    /* 3. Fade in next — small delay lets exit start first */
+    setTimeout(() => {
+      next.classList.add('ep-active');
+    }, 80);
 
-    /* 4. Now add transition back and animate next in */
-    next.classList.remove('ep-hidden');
-    next.classList.add('ep-active');
-
-    /* 5. Animate container height to next panel's natural height */
-    // Need to measure next.scrollHeight now it's ep-active (position:relative, in flow)
-    requestAnimationFrame(()=>{
-      wrap.style.height = next.scrollHeight + 'px';
-    });
-
-    /* 6. Update sidebar tabs */
+    /* 4. Update sidebar highlight */
     tabs.forEach(t => t.classList.toggle('active', t.dataset.target === targetId));
 
     activeId = targetId;
-
-    /* 7. Cleanup after transition */
-    setTimeout(()=>{
-      wrap.style.height = 'auto';
-      busy = false;
-    }, 700);
+    setTimeout(() => { busy = false; }, 700);
   }
 
-  /* Click handlers on sidebar tabs */
-  tabs.forEach(tab=>{
-    tab.addEventListener('click', e=>{
+  /* Sidebar click */
+  tabs.forEach(tab => {
+    tab.addEventListener('click', e => {
       e.preventDefault();
       switchTo(tab.dataset.target);
-      // Smooth scroll to top of experience section
+      /* Scroll so the top of the experience section is visible */
       const sec = document.getElementById('experience');
-      if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
+      if(sec){
+        const y = sec.getBoundingClientRect().top + window.scrollY - 72;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
     });
   });
 
-  /* ── SCROLL SPY ── */
-  /* Switch automatically when the experience section is ~60% scrolled */
+  /* Scroll spy — auto-switch as user scrolls through the section */
   const expSection = document.getElementById('experience');
-  let spyLocked = false;
-
-  window.addEventListener('scroll', ()=>{
+  window.addEventListener('scroll', () => {
     if(!expSection || busy) return;
-    const rect = expSection.getBoundingClientRect();
+    const rect     = expSection.getBoundingClientRect();
     const sectionH = expSection.offsetHeight;
-    // How far through the section are we? 0 = top, 1 = bottom
-    const progress = (-rect.top) / (sectionH - window.innerHeight);
+    const viewH    = window.innerHeight;
+    /* progress: 0 = section top at viewport top, 1 = section bottom at viewport bottom */
+    const progress = -rect.top / Math.max(sectionH - viewH, 1);
 
-    if(progress > 0.42 && activeId === 'panel-citi' && !spyLocked){
-      spyLocked = true;
-      switchTo('panel-barclays');
-    } else if(progress < 0.3 && activeId === 'panel-barclays' && !spyLocked){
-      spyLocked = true;
-      switchTo('panel-citi');
-    }
-    // Reset spy lock after switching completes
-    if(spyLocked){
-      setTimeout(()=>{ spyLocked=false; }, 800);
-    }
-  },{passive:true});
+    if(progress > 0.48 && activeId === 'panel-citi')     switchTo('panel-barclays');
+    if(progress < 0.28 && activeId === 'panel-barclays') switchTo('panel-citi');
+  }, { passive: true });
 
-  /* Handle window resize: recalculate height */
-  window.addEventListener('resize', ()=>{
-    const active = document.getElementById(activeId);
-    if(active && wrap.style.height !== 'auto') wrap.style.height = active.offsetHeight + 'px';
-  });
+  /* Recalculate on resize */
+  window.addEventListener('resize', () => setWrapHeight(activeId), { passive: true });
 })();
 </script>
 </body>
